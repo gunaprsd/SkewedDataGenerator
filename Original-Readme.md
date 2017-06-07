@@ -1,7 +1,7 @@
-/*  Sccsid:     @(#)README	9.1.1.14     1/23/96  09:43:27 */
+# Readme
 
-Table of Contents
-===================
+### Table of Contents
+
  0. What is this document?
  1. What is DBGEN?
  2. What will DBGEN create?
@@ -70,68 +70,27 @@ and environment variables. Command line options are assumed to be single
 letter flags preceded by a minus sign. They may be followed by an
 optional argument.
 
-option  argument    default     action
-------  --------    -------     ------
--v      none                    Verbose. Progress messages are 
-                                displayed as data is generated.
-
--f      none                    Force. Existing data files will be
-                                overwritten.
-
--F      none        yes         Flat file output.
-
--D      none                    Direct database load. ld_XXXX() routines
-                                must be defined in load_stub.c
-
--s      <scale>     1           Scale of the database population. Scale
-                                1.0 represents ~1 GB of data
-
--T      <table>                 Generate the data for a particular table
-                                ONLY. Arguments: p -- part/partuspp, 
-                                c -- customer, s -- supplier, 
-                                o -- order/lineitem, t -- time, 
-                                n -- nation, r -- region,
-                                l -- code (same as n and r),
-                                O -- order, L -- lineitem, P -- part, 
-                                S -- partsupp
-
--O      d                       Generate SQL for delete function 
-                                instead of key ranges
-
--O      f                       Allow over-ride of default output file 
-                                names
-
--O      h                       Generate headers in flat ascii files.
-                                hd_XXX routines must be defined in 
-                                load_stub.c
-
--O      m                       Flat files generate fixed length records
-
--O      r                       Generate key ranges for the UF2 update 
-                                function
-
--O      s                       Generate the state files for the random
-                                number generator.
-
--O      t                       Generate the optional time table and its
-                                associated join fields
-
--h                              Display a usage summary
-
--U      <updates>               Create a specified number of data sets
-                                in flat files for the update/delete 
-                                functions
-
--r      <percentage>     10     Scale each udpate file to the given 
-                                percentage (expressed in basis points)
-                                of the data set
-
--n      <name>                  Use database <name> for in-line load
-
--C      <children>              Use <children> separate processes to 
-                                generate data
-
--S      <n>                     Generate the <n>th part of a multi-part load
+| option | argument  |  default |    action                                   				|
+|--------|:---------:|:--------:|:----------------------------------------------------------------------|
+|-v     |none       |          | Verbose. Progress messages are displayed as data is generated. 	|
+|-f     |none       |          | Force. Existing data files will be overwritten.			|
+|-F     |none       |yes       | Flat file output.							|
+|-D     |none       |          | Direct database load. ld_XXXX() routine must be defined in load_stub.c |
+|-s     |[scale]    |1         | Scale of the database population. Scale 1.0 represents ~1 GB of data	|
+|-T     |[table]    |          | Generate the data for a particular table ONLY. Arguments: <br> p -- part/partuspp <br>c -- customer<br> s -- supplier, <br>o -- order/lineitem <br> t : time <br> n : nation <br> r : region <br> l : code (same as n and r) <br> O : order <br> L : lineitem <br> P : part <br> S : partsupp |
+|-O     |d          |          | Generate SQL for delete function instead of key ranges |
+|-O     |f          |          | Allow over-ride of default output file names |
+|-O     |h          |          | Generate headers in flat ascii files. hd_XXX routines must be defined in load_stub.c |
+|-O     |m          |          | Flat files generate fixed length records |
+|-O     |r          |          | Generate key ranges for the UF2 update function |
+|-O     |s          |          | Generate the state files for the random number generator. |
+|-O     |t          |          | Generate the optional time table and its associated join fields |
+|-h     |           |          | Display a usage summary |
+|-U     |[updates]  |          | Create a specified number of data sets in flat files for the update/delete functions |
+|-r     |[percentage]|10       | Scale each udpate file to the given percentage (expressed in basis points) of the data set |
+|-n     |[name]      |         | Use database [name] for in-line load |
+|-C     |[children]  |         | Use [hildren] separate processes to generate data |
+|-S     |[n]         |         | Generate the [n]th part of a multi-part load |
 
 5. Building Large Data Sets with DBGEN
 

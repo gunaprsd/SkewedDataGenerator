@@ -341,7 +341,7 @@ available with the '-h' option. A version number is of the form:
    | | | -- modification: alphabetic, incremented for any trivial changes to the source (e.g, porting ifdef's)  
    | | ---- patch level:  numeric, incremented for any minor bug fix (e.g, qgen parameter range)  
    | ------- release:      numeric, incremented for each major revision of the specification  
-   |-------- version:      numeric, incremented for each minor revision of the specification  
+   -------- version:      numeric, incremented for each minor revision of the specification  
   
 An implementation of TPC-D is valid only if it conforms to the following
 version usage rules:

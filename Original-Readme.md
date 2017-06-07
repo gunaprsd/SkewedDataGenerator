@@ -328,7 +328,7 @@ which are unlikely to change from one execution to another.
 |DSS_QUERY   |.           |Directory in which to find query templates		|
 |DSS_SEED    |.           |Directory in which to find seed files		|
 
-15. Version Numbering in DBGEN and QGEN
+### 15. Version Numbering in DBGEN and QGEN
 
 DBGEN and QGEN use a common version numbering algorithm. Each executable
 is stamped with a version number which is displayed in the usage messages

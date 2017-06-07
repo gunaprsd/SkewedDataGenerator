@@ -156,10 +156,10 @@ QGEN is a filter, triggered by :'s. It does line-at-a-time reads of its
 input (more on that later), scanning for :foo, where foo determines the
 substitution that occurs. Including:
 
-:<int>          replace with the appropriate value for parameter <int>
+:[int]          replace with the appropriate value for parameter [int]
 :b              replace with START_TRAN (from tpcd.h)
 :c              replace with SET_DBASE (from tpcd.h)
-:n<int>         replace with SET_ROWCOUNT(<int>) (from tpcd.h)
+:n[int]         replace with SET_ROWCOUNT([int]) (from tpcd.h)
 :o              replace with SET_OUTPUT (from tpcd.h)
 :q              replace with query number
 :s              replace with stream number
@@ -232,47 +232,22 @@ detail).  Command line options are assumed to be single
 letter flags preceded by a minus sign. They may be followed by an
 optional argument.
 
-option  argument    default     action
-------  --------    -------     ------
--c      none                    Retain comments in translation of template to
-                                EQT
-
--d      none                    Default. Use the parameter substitutions
-                                required for query validation
-
--h                              Display a usage summary
-
--i      <file>                  Use contents of <file> to init a query stream
-
--l      <file>                  Save query parameters to <file>
-
--n      <name>                  Use database <name> for queries
-
--N                              Always use default rowcount, and ignore :n directives
-
--o      <path>                  Save query n's output in <path>/n.<stream>
-                                Uses -p option, and uses :o tag
-
--p      <stream>                Use the query permutation defined for
-                                stream <stream>. If this option is
-                                omited, EQT will be generated for the
-                                queries named on the command line.
-
--r      <n>                     Seed the rnadom number generator with <n>
-
--s      <n>                     Set scale to <n> for parameter 
-                                substitutions.
-
--t      <file>                  Use contents of <file> to complete a query 
-                                stream
-
--T      none                    Use time table format for date substitution
-
--v      none                    Verbose. Progress messages are 
-                                displayed as data is generated.
-
--x      none                    Generate a query plan as part of query
-                                execution.
+|option|argument|default|action|
+|-----:|:------:|:-----:|:----:|
+|-c	|none	|	| Retain comments in translation of template to EQT |
+|-d     |none   |       | Default. Use the parameter substitutions required for query validation |
+|-h	|	|	| Display a usage summary |
+|-i	|[file]	|       | Use contents of [file] to init a query stream |
+|-l	|[file]	|	| Save query parameters to [file] |
+|-n     |[name] |	| Use database [name] for queries |	
+|-N     |       |       | Always use default rowcount, and ignore :n directives. Save query n's output in [path]/n.[stream] Uses -p option, and uses :o tag |
+|-p	|[stream]|	| Use the query permutation defined for stream [stream]. If this option is omited, EQT will be generated for the queries named on the command line. |
+|-r     |[n]	|	| Seed the rnadom number generator with [n] |
+|-s     |[n]	|	| Set scale to [n] for parameter  substitutions. |
+|-t     |[file] |	| Use contents of <file> to complete a query stream |
+|-T	| none	|	| Use time table format for date substitution |
+|-v     | none	|       | Verbose. Progress messages are displayed as data is generated. |
+|-x     | none  |       | Generate a query plan as part of query execution. |
 
 ### 12. Query Template Syntax
 
@@ -290,24 +265,17 @@ below.  QGEN does not support nested substitutions. That is, if
 the text substituted for tag itself contains a valid tag the second tag
 will not be expanded.
 
-Tag             Converted To            Based on
-===             ============            ========
-:c		database <dbname>;(1)   -n from the command line
-:x              set explain on;(1)      -x from the command line
-:<number>       paremeter <number>
-:s              stream number
-:o              output to outpath/qnum.stream;(1)
-					-o from command line, -s from 
-                                        command line
-:b              BEGIN WORK;(1)          -a from comand line
-:e              COMMIT WORK(1)          -a from command line
-:q              query number
-:n <number>                             sets rowcount to be returned 
-                                        to <number>, unless -N appears on the command line
-
-Notes:
-   (1)  This is Informix-specific syntax. Refer to Porting.Notes for
-   tailoring the generated text to your database environment.
+|Tag		|Converted To			|Based on|
+|--------------:|:-----------------------------:|:-------:|
+|:c		|database [dbname]		|-n from the command line |
+|:x		|set explain on 		|-x from the command line |
+|:[number]	|paremeter [number]		||
+|:s		|stream number 			||
+|:o		|output to outpath/qnum.stream  |-o from command line <br> -s from  command line |
+|:b		| BEGIN WORK;(1)        	|-a from comand line 	|
+|:e		| COMMIT WORK(1)        	|-a from command line 	|
+|:q		| query number			||
+|:n[number]	|				|sets rowcount to be returned to [number] <br> unless -N appears on the command line |
    
 ### 13. Sample QGEN executions and Query Templates
 
@@ -325,63 +293,56 @@ interact to produce valid SQL.
             select count(*) from lineitem
               where l_orderdate < ':1';
 
-  1. "qgen 1", would produce:
+  1. `qgen 1`, would produce the following assuming that 1 January 1997 was a valid substitution for parameter 1.
+      ```sql
       select count(*) from foo;
-      select count(*) from lineitem 
-        where l_orderdate < '1997-01-01'; 
-   Assuming that 1 January 1997 was a valid substitution for parameter 1.
+      select count(*) from lineitem  where l_orderdate < '1997-01-01'; 
+      ```
 
-  2. "qgen -d -c dss1 1, would produce:
+  2. "qgen -d -c dss1 1, would produce the following Assuming that 18 July 1995 was the default substitution for parameter 1, and using Informix syntax: 
+      ```sql
       database dss1;
       select count(*) from foo;
-      select count(*) from lineitem 
-        where l_orderdate < '1995-07-18'; 
-   Assuming that 18 July 1995 was the default substitution for parameter 1,
-    and using Informix syntax.
+      select count(*) from lineitem where l_orderdate < '1995-07-18'; 
+	```
+   
 
-  3. "qgen -d -c dss1 -x -o somepath 1, would produce:
+  3. "qgen -d -c dss1 -x -o somepath 1, would produce the following assuming that 18 July 1995 was the default substitution for parameter 1, and using Informix syntax.
+      ```sql
       database dss1;
       output to "somepath/1.0"
       select count(*) from foo;
       set explain on;
-      select count(*) from lineitem 
-        where l_orderdate < '1995-07-18'; 
-   Assuming that 18 July 1995 was the default substitution for parameter 1,
-    and using Informix syntax.
- 
-
+      select count(*) from lineitem where l_orderdate < '1995-07-18'; ```
+   
 ### 14. Environment Variables
 
 Enviroment variables are used to control features of DBGEN and QGEN 
 which are unlikely to change from one execution to another.
 
-Variable    Default     Action
--------     -------     ------
-DSS_PATH    .           Directory in which to build flat files
-DSS_CONFIG  .           Directory in which to find configuration files
-DSS_DIST    dists.dss   Name of distribution definition file
-DSS_QUERY   .           Directory in which to find query templates
-DSS_SEED    .           Directory in which to find seed files
+|Variable    |Default     |Action 						|
+|-----------:|:----------:|:---------------------------------------------------:|
+|DSS_PATH    |.           |Directory in which to build flat files		|
+|DSS_CONFIG  |.           |Directory in which to find configuration files	|
+|DSS_DIST    |dists.dss   |Name of distribution definition file			|
+|DSS_QUERY   |.           |Directory in which to find query templates		|
+|DSS_SEED    |.           |Directory in which to find seed files		|
 
 15. Version Numbering in DBGEN and QGEN
 
 DBGEN and QGEN use a common version numbering algorithm. Each executable
 is stamped with a version number which is displayed in the usage messages
 available with the '-h' option. A version number is of the form:
-
-   V.R.P.M
-   | | | |
-   | | | |
-   | | | |
-   | | |  -- modification: alphabetic, incremented for any trivial changes 
-   | | |                   to the source (e.g, porting ifdef's)
-   | |  ---- patch level:  numeric, incremented for any minor bug fix
-   | |                     (e.g, qgen parameter range)
-   | ------- release:      numeric, incremented for each major revision of the
-   |                       specification
-   |-------- version:      numeric, incremented for each minor revision of the 
-                           specification
-
+  
+   V.R.P.M  
+   | | | |  
+   | | | |  
+   | | | |  
+   | | | -- modification: alphabetic, incremented for any trivial changes to the source (e.g, porting ifdef's)  
+   | | ---- patch level:  numeric, incremented for any minor bug fix (e.g, qgen parameter range)  
+   | ------- release:      numeric, incremented for each major revision of the specification  
+   |-------- version:      numeric, incremented for each minor revision of the specification  
+  
 An implementation of TPC-D is valid only if it conforms to the following
 version usage rules:
   -- The Version of DBGEN and QGEN must match the fractional portion of the 

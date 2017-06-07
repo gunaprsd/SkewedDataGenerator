@@ -1,25 +1,6 @@
 # Readme
-
-### Table of Contents
-
- 0. What is this document?
- 1. What is DBGEN?
- 2. What will DBGEN create?
- 3. How is DBGEN built?
- 4. Command Line Options for DBGEN
- 5. Building Large Data Sets with DBGEN
- 6. DBGEN limitations and compliant usage
- 7. Sample DBGEN executions
- 8. What is QGEN?
- 9. What will QGEN create?
-10. How is QGEN built?
-11. Command Line Options for QGEN
-12. Query Template Syntax
-13. Sample QGEN executions and Query Templates
-14. Environment variable
-15. Version Numbering in DBGEN and QGEN
-
-0. What is this document?
+  
+### 0. What is this document?
 
 This is the general README file for DBGEN and QGEN, the data-
 base population and executable query text generation programs 
@@ -27,7 +8,7 @@ used in the TPC-D benchmark. It covers the proper use of DBGEN and
 QGEN. For information on porting the utility to your particular 
 platform see Porting.Notes.
 
-1. What is DBGEN?
+### 1. What is DBGEN?
 
 DBGEN is a database population program for use with the TPC-D benchmark.
 It is written in ANSI 'C' for portability, and has been successfully
@@ -37,7 +18,7 @@ database, the resultant population must exactly match the output of
 DBGEN. The source code has been provided to make the process of building
 a compliant database population as simple as possible.
 
-2. What will DBGEN create?
+### 2. What will DBGEN create?
 
 Without any command line options, DBGEN will generate 8 separate ascii
 files. Each file will contain pipe-delimited load data for one of the
@@ -57,13 +38,13 @@ named "u_lineitem.tbl.3", and the SQL to remove those rows will be
 found in "delete.3". The size of the update files can be controlled 
 with the '-r' flag.
 
-3. How is DBGEN built?
+### 3. How is DBGEN built?
 
 Create an appropriate makefile, using makefile.suite as a basis, 
 and type make.  Refer to Porting.Notes for more details and for 
 suggested compile time options.
 
-4. Command Line Options for DBGEN
+### 4. Command Line Options for DBGEN
 
 DBGEN's output is controlled by a combination of command line options
 and environment variables. Command line options are assumed to be single
@@ -92,7 +73,7 @@ optional argument.
 |-C     |[children]  |         | Use [hildren] separate processes to generate data |
 |-S     |[n]         |         | Generate the [n]th part of a multi-part load |
 
-5. Building Large Data Sets with DBGEN
+### 5. Building Large Data Sets with DBGEN
 
 DBGEN relies on its own random number generator to assure that identical data
 sets can be generated on different platforms. In order to build large data sets
@@ -112,7 +93,7 @@ process load of 300 GB would be 3201E00A. Since there can be a large number of
 seed files, DBGEN allows you to segregate them in the directory named in the
 environment variable DSS_SEED.
 
-6. DBGEN limitations and compliant usage
+### 6. DBGEN limitations and compliant usage
 
 DBGEN is meant to be a robust population generator for use with the 
 TPC-D benchmark. It is hoped that DBGEN will make it easier to experi-
@@ -128,7 +109,7 @@ which should be used with care include:
 -r -- refresh percentage. TPC-D runs are only compliant when run with 
       -r 10, the default.
 
-7. Sample DBGEN executions
+### 7. Sample DBGEN executions
 
 DBGEN has been built to allow as much flexibility as possible, but is
 fundementally intended to generate two things: a database population 
@@ -160,7 +141,7 @@ of DBGEN.
      of updates. Use whatever seed files are available.
      
 
-8. What is QGEN?
+### 8. What is QGEN?
 
 QGEN is a query generation program for use with the TPC-D benchmark.
 It is written in ANSI 'C' for portability, and has been successfully
@@ -169,7 +150,7 @@ allows an implementor to use any utility to create the benchmark query
 sets, QGEN has been provided to make the process of building
 a benchmark implementation as simple as possible.
 
-9. What will QGEN create?
+### 9. What will QGEN create?
 
 QGEN is a filter, triggered by :'s. It does line-at-a-time reads of its
 input (more on that later), scanning for :foo, where foo determines the
@@ -187,13 +168,10 @@ substitution that occurs. Including:
 Qgen takes an assortment of command line options, controlling which of these
 options should be active during the translation from template to EQT, and a
 list of query "names". It then translates the template found in
-$DSS_QUERY/<name>.sql and puts the result of stdout.
+$DSS_QUERY/[name].sql and puts the result of stdout.
 
 Here is a sample query template:
-
-{  Sccsid:     @(#)1.sql        9.1.1.1     1/25/95  10:51:56  }
-:n 0
-:o
+```sql
 select
  l_returnflag,
  l_linestatus,
@@ -209,12 +187,15 @@ from lineitem
 where l_shipdate <= date '1998-12-01' - interval :1 day
 group by l_returnflag, l_linestatus
 order by l_returnflag, l_linestatus;
+```
 
 And here is what is generated:
+```
 $ qgen -d 1
-
 {return 0 rows}
+```
 
+```sql
 select
  l_returnflag,
  l_linestatus,
@@ -230,11 +211,12 @@ from lineitem
 where l_shipdate <= date('1998-12-01') - interval (90)  day to day
 group by l_returnflag, l_linestatus
 order by l_returnflag, l_linestatus;
+```
 
 See "Query Template Syntax" below for more detail on converting your prefered query
 phrasing for use with QGEN.
 
-10. How is QGEN built?
+### 10. How is QGEN built?
 
 QGEN is built by the same makefile that creates DBGEN. If the makefile
 is successfully creating DBGEN, no further compilation modifications
@@ -292,7 +274,7 @@ option  argument    default     action
 -x      none                    Generate a query plan as part of query
                                 execution.
 
-12. Query Template Syntax
+### 12. Query Template Syntax
 
 QGEN is a simple ASCII text filter, meant to translate query generalized
 query syntax("query template") into the executable query text(EQT) re-
@@ -327,7 +309,7 @@ Notes:
    (1)  This is Informix-specific syntax. Refer to Porting.Notes for
    tailoring the generated text to your database environment.
    
-13. Sample QGEN executions and Query Templates
+### 13. Sample QGEN executions and Query Templates
 
 QGEN translates generic query templates into valid SQL. In addition, it 
 allows conditional inclusion of the commands necessary to connect to a 
@@ -368,7 +350,7 @@ interact to produce valid SQL.
     and using Informix syntax.
  
 
-14. Environment Variables
+### 14. Environment Variables
 
 Enviroment variables are used to control features of DBGEN and QGEN 
 which are unlikely to change from one execution to another.

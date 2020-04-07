@@ -2,7 +2,7 @@ CC=gcc
 TARGET=dbgen
 
 $(TARGET) : 
-	$(CC) *.c -o -lm $@ -w
+	$(CC) *.c -o @ -lm -w
  
 .PHONY: clean
 
